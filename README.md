@@ -33,10 +33,10 @@ A docker image for running AWS CLI commands.
 - aws-cli
 - aws-shell
 - awsebcli
-- ecs-cli
 
 ### Other
 
+- terraform
 - bash
 - less
 - curl
