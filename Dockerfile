@@ -1,7 +1,7 @@
 FROM alpine:3.8
 
-# Configure less
 ENV PAGER="less -r"
+ENV TERRAFORM_VERSION=0.11.13
 
 # Install required packages
 RUN set -ex; \
@@ -23,13 +23,15 @@ RUN set -ex; \
 RUN pip install --upgrade \
       pip \
       aws-shell \
-      awsebcli;
+      awsebcli; \
+    echo "complete -C '/usr/bin/aws_completer' aws" >> ~/.bashrc;
 
-# Install ecs-cli
-RUN curl -o /usr/local/bin/ecs-cli https://s3.amazonaws.com/amazon-ecs-cli/ecs-cli-linux-amd64-latest && chmod u+x /usr/local/bin/ecs-cli
-
-# Add aws cli command completion
-RUN echo "complete -C '/usr/bin/aws_completer' aws" >> ~/.bashrc
+# Install Terraform
+RUN set -ex; \
+    curl -o terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip; \
+    unzip terraform.zip -d /usr/bin; \
+    rm terraform.zip; \
+    echo "complete -C '/usr/bin/terraform' terraform" >> ~/.bashrc;
 
 RUN mkdir /code
 WORKDIR /code
